@@ -175,7 +175,7 @@ class Core(object):
         log.debug(self.loaded_extensions)
         log.debug([dir(m) for m in self.loaded_extensions])
 
-    def validate(self, raise_exception=True):
+    def validate(self, raise_exception=True, silent=False):
         """
         """
         log.debug(u"starting core")
@@ -185,19 +185,22 @@ class Core(object):
         self.validation_errors_exceptions = self.errors
 
         if self.errors is None or len(self.errors) == 0:
-            log.info(u"validation.valid")
+            if not silent:
+                log.info(u"validation.valid")
         else:
-            log.error(u"validation.invalid")
-            log.error(u" --- All found errors ---")
-            log.error(self.validation_errors)
+            if not silent:
+                log.error(u"validation.invalid")
+                log.error(u" --- All found errors ---")
+                log.error(self.validation_errors)
             if raise_exception:
                 raise SchemaError(u"Schema validation failed:\n - {error_msg}.".format(
                     error_msg=u'.\n - '.join(self.validation_errors)))
             else:
-                log.error(u"Errors found but will not raise exception...")
+                if not silent:
+                    log.error(u"Errors found but will not raise exception...")
 
         # Return validated data
-        return self.source
+        return len(self.errors) == 0
 
     def _start_validate(self, value=None):
         """

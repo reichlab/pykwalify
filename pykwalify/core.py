@@ -114,12 +114,12 @@ class Core(object):
                 with open(f, "r", encoding=file_encoding) as stream:
                     if f.endswith(".json"):
                         data = json.load(stream)
-                    elif f.endswith(".yaml") or f.endswith(".yml"):
+                    elif f.endswith(".yaml") or f.endswith(".yml") or f.endswith(".txt"):
                         data = yml.load(stream)
                         if not data:
                             raise CoreError(u"No data loaded from file : {0}".format(f))
                     else:
-                        raise CoreError(u"Unable to load file : {0} : Unknown file format. Supported file endings is [.json, .yaml, .yml]")
+                        raise CoreError(u"Unable to load file : {0} : Unknown file format. Supported file endings is [.json, .yaml, .yml, .txt]")
 
                     for key in data.keys():
                         if key in schema_data.keys():
